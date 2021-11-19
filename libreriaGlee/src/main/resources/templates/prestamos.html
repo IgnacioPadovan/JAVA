@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragments/head :: head"></head>
+
+<body>
+
+    <nav th:replace="/fragments/navbar :: nav"></nav>
+  
+  <header>
+      <h1 style="margin-top:80px; text-align:center;">Mis Prestamos</h1>
+  </header>
+  
+  <section>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-12 order-lg-12">
+            
+            <a th:href="@{/prestamo/editar-prestamo}" class="btn btn-primary btn-xl rounded-pill mt-5"> + </a>
+            <table class="table table-light table-hover">
+                <thead>
+                    <tr class="bg-primary"></tr>
+                    <th>Fecha Prestamo</th>
+                    <th>Fecha Devolución</th>
+                    <th>Estado</th>
+                    <th>Cliente</th>
+                    <th>Libro</th>
+                    <th>Acciones</th>
+                </thead>
+                <tbody>
+                    <tr th:each="prestamo : ${prestamos}">
+                        <td th:text="${prestamo.fechaPrestamo}"></td>
+                        <td th:text="${prestamo.fechaDevolucion}"></td>
+                        <td>
+                            <span th:if="${prestamo.alta == true}" class="bg-primary">Alta</span>
+                            <span th:if="${prestamo.alta == false}" class="bg bg-warning ">Baja</span>
+                        </td>
+                      
+                        <td>
+                            <span th:if="${prestamo.cliente != null}" th:text="${prestamo.cliente.nombre}"></span>
+                            <span th:if="${prestamo.cliente == null}"> N/D </span>
+                        </td>
+                        <td>
+                            <span th:if="${prestamo.libro != null}" th:text="${prestamo.libro.titulo}"></span>
+                            <span th:if="${prestamo.libro == null}"> N/D </span>
+                        </td>
+                        
+                        <td class="col">
+                            <a th:href="@{/prestamo/editar-prestamo(id=__${prestamo.id}__,accion='Actualizar')}">Editar</a>
+                            <a th:href="@{/prestamo/editar-prestamo(id=__${prestamo.id}__,accion='Eliminar')}">Dar de Baja</a>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+                
+                
+                
+            </table>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+<footer th:replace="/fragments/footer :: footer"></footer>
+<!-- Bootstrap core JavaScript -->
+ <script th:replace="/fragments/boostjs :: script"></script>
+
+
+</body>
+
+</html>

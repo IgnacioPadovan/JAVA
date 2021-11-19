@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragments/head :: head"></head>
+
+<body>
+
+    <nav th:replace="/fragments/navbar :: nav"></nav>
+  
+  <header>
+      <h1 style="margin-top:80px; text-align:center;">Mis Clientes</h1>
+  </header>
+  
+  <section>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-12 order-lg-12">
+            
+            <a th:href="@{/cliente/editar-cliente}" class="btn btn-primary btn-xl rounded-pill mt-5">+</a>
+            <table class="table table-light table-hover">
+                <thead>
+                    <tr class="bg-primary"></tr>
+                    <th>Documento</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </thead>
+                <tbody>
+                    <tr th:each="cliente : ${clientes}">
+                        <td th:text="${cliente.documento}"></td>
+                        <td th:text="${cliente.nombre}"></td>
+                        <td th:text="${cliente.apellido}"></td>
+                        <td>
+                            <span th:if="${cliente.alta == true}" class="bg-primary">Alta</span>
+                            <span th:if="${cliente.alta == false}" class="bg bg-warning ">Baja</span>
+                        </td>
+                        <td class="col">
+                            <a th:href="@{/cliente/editar-cliente(id=__${cliente.id}__,accion='Actualizar')}">Editar</a>
+                            <a th:href="@{/cliente/editar-cliente(id=__${cliente.id}__,accion='Eliminar')}">Dar de Baja</a>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+                
+                
+                
+            </table>
+        </div>
+        </div>
+      </div>
+  </section>
+
+  <!-- Footer -->
+<footer th:replace="/fragments/footer :: footer"></footer>
+<!-- Bootstrap core JavaScript -->
+ <script th:replace="/fragments/boostjs :: script"></script>
+
+
+</body>
+
+</html>

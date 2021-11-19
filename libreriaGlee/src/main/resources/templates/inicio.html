@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragments/head :: head"></head>
+
+<body>
+
+    <nav th:replace="/fragments/navbar :: nav"></nav>
+
+  <header class="masthead text-center text-white">
+    <div class="masthead-content">
+      <div class="container">
+        <h1 class="masthead-heading mb-0">¡Bienvenido/a!</h1>
+        <h2 class="masthead-subheading mb-0" th:if="${session.adminsession != null}" th:text="${session.adminsession.nombre + ' ' + session.adminsession.apellido}"></h2>
+        <a href="/autor/mis-autores" class="btn btn-primary btn-xl rounded-pill mt-5">Autores</a>
+        <a href="/editorial/mis-editoriales" class="btn btn-primary btn-xl rounded-pill mt-5">Editorial</a>
+        <a href="/libro/mis-libros" class="btn btn-primary btn-xl rounded-pill mt-5">Libros</a>
+        <a href="/prestamo/mis-prestamos" class="btn btn-primary btn-xl rounded-pill mt-5">Prestamos</a>
+        <a href="/cliente/mis-clientes" class="btn btn-primary btn-xl rounded-pill mt-5">Clientes</a>
+      </div>
+    </div>
+    <div class="bg-circle-1 bg-circle"></div>
+    <div class="bg-circle-2 bg-circle"></div>
+    <div class="bg-circle-3 bg-circle"></div>
+    <div class="bg-circle-4 bg-circle"></div>
+  </header>
+
+
+  <!-- Footer -->
+<footer th:replace="/fragments/footer :: footer"></footer>
+<!-- Bootstrap core JavaScript -->
+ <script th:replace="/fragments/boostjs :: script"></script>
+
+
+</body>
+
+</html>
