@@ -31,13 +31,10 @@ public class FamiliaService {
         Optional<Usuario> respuesta1 = usuarioRepository.findById(idUsuario);
         if (respuesta1.isPresent()) {
             Usuario usuario = respuesta1.get();
-            Optional<Casa> respuesta2 = casaRepository.findById(idCasa);
-            if (respuesta2.isPresent()) {
-                Casa casa = respuesta2.get();
 
                 Familia familia = new Familia();
 
-                familia.setCasa(casa);
+                familia.setCasa(null);
                 familia.setEdadMax(edadMax);
                 familia.setEdadMin(edadMin);
                 familia.setEmail(email);
@@ -46,9 +43,6 @@ public class FamiliaService {
                 familia.setUsuario(usuario);
 
                 familiaRepository.save(familia);
-            } else {
-                throw new Error("No se encontró la casa solicitada.");
-            }
         } else {
             throw new Error("No se encontró el usuario solicitado.");
         }

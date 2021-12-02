@@ -1,7 +1,10 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Casa;
+import com.example.demo.entities.Familia;
 import com.example.demo.repositories.CasaRepository;
+import com.example.demo.repositories.FamiliaRepository;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +18,11 @@ public class CasaService {
     @Autowired
     private CasaRepository casaRepository;
 
+    @Autowired
+    private FamiliaRepository familiaRepository;
+    
     @Transactional
-    public void registrar(String calle, String codPostal, String ciudad,
+    public void registrar(Familia familia, String calle, String codPostal, String ciudad,
             String tipoVivienda, Date fechaDesde, Date fechaHasta, int numero,
             int minDias, int maxDias, double precio) throws Error {
 
@@ -37,7 +43,9 @@ public class CasaService {
         casa.setTipoVivienda(tipoVivienda);
 
         casaRepository.save(casa);
-
+        Casa c = casaRepository.buscarUltimoCargado();
+        familia.setCasa(c);
+        familiaRepository.save(familia);
     }
 
     @Transactional

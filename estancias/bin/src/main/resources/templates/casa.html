@@ -5,14 +5,25 @@
 
 <body id="page-top" data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="77">
     
-       <nav th:replace="/fragments/navbar :: nav"></nav>
+        <nav th:replace="/fragments/navbar :: nav"></nav>
+
+    <header class="masthead" style="background-image:url('/img/intro-bg.jpg');">
+        <div class="masthead-content">
+      <div class="container">
+        <h1 class="masthead-heading mb-0">¡Bienvenido/a!</h1>
+        <h2 class="masthead-subheading mb-0" th:if="${session.usuariosession != null}" th:text="${session.usuariosession.alias}"></h2>
         
-    <section class="text-center content-section">
+      </div>
+    </div>
+    </header>
+    <section class="text-center content-section" id="about">
         <div class="container">
-            <p th:if="${mensaje == null}" class="display-4">Ingresa los datos de tu hogar para que el mundo lo conozca</p>
-            <p th:if="${mensaje != null}" class="display-4" th:text=""></p>
+            <h2 class="display-4">Ingresa los datos de tu hogar para que el mundo lo conozca</h2>
             <p th:if="${error != null}" th:text="${error}" style="background-color: red"></p>
             <form action="/casa/registro" method="POST">
+                
+              <label>Nombre</label>
+              <input type="text" class="form-control" name="nombre" th:value=${nombre}/>
 
               <label>Calle</label>
               <input type="text" class="form-control" name="calle" th:value=${calle}/>
@@ -47,7 +58,7 @@
               <label>Tipo de Vivienda</label>
               <input type="text" class="form-control" name="tipoVivienda" th:value=${tipoVivienda}/>
               
-              <br/><button type="submit" class="btn btn-primary">Cargar mi casa</button>
+              <br/><button type="submit" class="btn btn-primary">Registrarme</button>
             </form>
         </div>
     </section>
