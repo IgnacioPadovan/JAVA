@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.entities.Cliente;
+import com.example.demo.entities.Usuario;
 import com.example.demo.services.ClienteService;
 import com.example.demo.services.FamiliaService;
 import com.example.demo.services.UsuarioService;
@@ -29,8 +30,10 @@ public class ClienteController {
     @GetMapping("/")
     public String registrar(HttpSession session, @RequestParam String accion, ModelMap modelo) {
         
-        modelo.put("accion","accion");
-        modelo.put("email","session.getEmail");
+        Usuario usuario = (Usuario) session.getAttribute("usuariosession");
+        
+        modelo.put("accion", accion);
+        modelo.put("email", usuario.getEmail());
         
         return "registro.html";
     }

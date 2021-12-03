@@ -6,6 +6,8 @@ import com.example.demo.entities.Estancia;
 import com.example.demo.repositories.CasaRepository;
 import com.example.demo.repositories.ClienteRepository;
 import com.example.demo.repositories.EstanciaRepository;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -25,7 +27,6 @@ public class EstanciaService {
     @Transactional
     public void registrar(String huesped, Date fechaDesde, Date fechaHasta, String idCliente, String idCasa) throws Error {
 
-        validar(huesped, fechaDesde, fechaHasta);
 
         Optional<Cliente> respuesta1 = clienteRepository.findById(idCliente);
         if (respuesta1.isPresent()) {
@@ -34,6 +35,8 @@ public class EstanciaService {
             if (respuesta2.isPresent()) {
                 Casa casa = respuesta2.get();
 
+                validar(huesped, fechaDesde, fechaHasta, casa);
+                
                 Estancia estancia = new Estancia();
 
                 estancia.setCasa(casa);
@@ -55,18 +58,21 @@ public class EstanciaService {
     @Transactional
     public void modificar(String id, String huesped, Date fechaDesde, Date fechaHasta, String idCliente, String idCasa) throws Error {
 
-        validar(huesped, fechaDesde, fechaHasta);
-
         Optional<Estancia> respuesta = estanciaRepository.findById(id);
+        
         if (respuesta.isPresent()) {
             Estancia estancia = respuesta.get();
             Optional<Cliente> respuesta1 = clienteRepository.findById(idCliente);
+            
             if (respuesta1.isPresent()) {
                 Cliente cliente = respuesta1.get();
                 Optional<Casa> respuesta2 = casaRepository.findById(idCasa);
+                
                 if (respuesta2.isPresent()) {
                     Casa casa = respuesta2.get();
 
+                    validar(huesped, fechaDesde, fechaHasta, casa);
+                    
                     estancia.setCasa(casa); // Analizar logica para cambiar datos de la casa
                     estancia.setCliente(cliente); // Analizar logica para cambiar datos del cliente
                     estancia.setFechaDesde(fechaDesde);
@@ -101,7 +107,7 @@ public class EstanciaService {
 
     }
 
-    private void validar(String huesped, Date fechaDesde, Date fechaHasta) {
+    private void validar(String huesped, Date fechaDesde, Date fechaHasta, Casa casa) {
 
         if (huesped == null || huesped.trim().isEmpty()) {
             throw new Error("Debe indicar el nombre");
@@ -115,8 +121,29 @@ public class EstanciaService {
         if (fechaHasta == null || fechaHasta.toString().isEmpty()) {
             throw new Error("Se debe ingresar la fecha de regreso");
         }
+        if (casa.getFechaDesde().after(fechaDesde)) {
+            throw new Error("No esta permitida dicha fecha de arrivo. Indique una posterior al " + 
+                    casa.getFechaDesde().getDate() + "/" + casa.getFechaDesde().getMonth() + "/" +
+                    casa.getFechaDesde().getYear());
+        }
+        if (casa.getFechaHasta().before(fechaHasta)) {
+            throw new Error("No esta permitida dicha fecha de regreso. Indique una posterior al " + 
+                    casa.getFechaHasta().getDate() + "/" + casa.getFechaHasta().getMonth() + "/" +
+                    casa.getFechaHasta().getYear());
+        }
         
+        Long dif = convertidorDateToLocalDate(fechaHasta).toEpochDay() - convertidorDateToLocalDate(fechaDesde).toEpochDay();
         
+        if (dif > casa.getMaxDias() || dif < casa.getMaxDias()) {
+            throw new Error("Supera o no alcanza el los limites de estancia determinados por la familia.");
+        }
         
+    }
+
+    private LocalDate convertidorDateToLocalDate(Date fechaDesde) {
+        return fechaDesde.toInstant()
+      .atZone(ZoneId.systemDefault())
+      .toLocalDate();
+
     }
 }

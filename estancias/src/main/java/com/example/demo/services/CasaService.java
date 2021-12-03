@@ -8,9 +8,9 @@ import com.example.demo.repositories.FamiliaRepository;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CasaService {
@@ -24,9 +24,9 @@ public class CasaService {
     @Transactional
     public void registrar(Familia familia, String calle, String codPostal, String ciudad,
             String tipoVivienda, Date fechaDesde, Date fechaHasta, int numero,
-            int minDias, int maxDias, double precio) throws Error {
+            int minDias, int maxDias, double precio, String pais) throws Error {
 
-        validar(calle, codPostal, ciudad, tipoVivienda, fechaDesde, fechaHasta, numero, minDias, maxDias, precio);
+        validar(calle, codPostal, ciudad, tipoVivienda, fechaDesde, fechaHasta, numero, minDias, maxDias, precio, pais);
 
         Casa casa = new Casa();
 
@@ -38,12 +38,12 @@ public class CasaService {
         casa.setMaxDias(maxDias);
         casa.setMinDias(minDias);
         casa.setNumero(numero);
-        casa.setPais(calle);
+        casa.setPais(pais);
         casa.setPrecio(precio);
         casa.setTipoVivienda(tipoVivienda);
 
         casaRepository.save(casa);
-        Casa c = casaRepository.buscarUltimoCargado();
+        Casa c =  casaRepository.buscarCasaPorCaractersiticas(calle, numero, ciudad);
         familia.setCasa(c);
         familiaRepository.save(familia);
     }
@@ -51,9 +51,9 @@ public class CasaService {
     @Transactional
     public void modificar(String id, String calle, String codPostal, String ciudad,
             String tipoVivienda, Date fechaDesde, Date fechaHasta, int numero,
-            int minDias, int maxDias, double precio) throws Error {
+            int minDias, int maxDias, double precio, String pais) throws Error {
 
-        validar(calle, codPostal, ciudad, tipoVivienda, fechaDesde, fechaHasta, numero, minDias, maxDias, precio);
+        validar(calle, codPostal, ciudad, tipoVivienda, fechaDesde, fechaHasta, numero, minDias, maxDias, precio, pais);
 
         Optional<Casa> respuesta = casaRepository.findById(id);
         if (respuesta.isPresent()) {
@@ -67,7 +67,7 @@ public class CasaService {
             casa.setMaxDias(maxDias);
             casa.setMinDias(minDias);
             casa.setNumero(numero);
-            casa.setPais(calle);
+            casa.setPais(pais);
             casa.setPrecio(precio);
             casa.setTipoVivienda(tipoVivienda);
 
@@ -92,9 +92,12 @@ public class CasaService {
 
     private void validar(String calle, String codPostal, String ciudad,
             String tipoVivienda, Date fechaDesde, Date fechaHasta, int numero,
-            int minDias, int maxDias, double precio) {
+            int minDias, int maxDias, double precio, String pais) {
 
         if (calle == null || calle.trim().isEmpty()) {
+            throw new Error("Debe indicar la calle");
+        }
+        if (pais == null || pais.trim().isEmpty()) {
             throw new Error("Debe indicar la calle");
         }
         if (codPostal == null || codPostal.trim().isEmpty()) {
@@ -123,7 +126,7 @@ public class CasaService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Casa> listarCasas() {
 
         List<Casa> casas = casaRepository.findAll();
@@ -132,6 +135,21 @@ public class CasaService {
         } else {
             throw new Error("No se encontraron casas para mostrar");
         }
+
+    }
+
+    @Transactional(readOnly = true)
+    public Casa buscarPorId(String idCasa) {
+
+        Optional<Casa> respuesta = casaRepository.findById(idCasa);
+        if (respuesta.isPresent()) {
+            return respuesta.get();
+
+        } else {
+            throw new Error("No se encontró la casa solicitada.");
+        }
+
+
 
     }
 }

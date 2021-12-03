@@ -12,7 +12,7 @@
       <div class="container">
         <h1 class="masthead-heading mb-0">¡Bienvenido/a!</h1>
         <h2 class="masthead-subheading mb-0" th:if="${session.usuariosession != null}" th:text="${session.usuariosession.alias}"></h2>
-        <a th:href="@{/estancia/(idUsuario=__${session.usuariosession.id}__)}" class="btn btn-primary btn-xl rounded-pill mt-5">Buscar Alojamiento</a>
+        <a th:href="@{/casa/casas(idUsuario=__${session.usuariosession.id}__)}" class="btn btn-primary btn-xl rounded-pill mt-5">Buscar Alojamiento</a>
         <a th:href="@{/casa/(idUsuario=__${session.usuariosession.id}__)}" class="btn btn-primary btn-xl rounded-pill mt-5">Ofrecer Alojamiento</a>
       </div>
     </div>

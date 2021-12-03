@@ -1,10 +1,12 @@
 package com.example.demo.services;
 
+import com.example.demo.entities.Casa;
 import com.example.demo.entities.Cliente;
 import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.ClienteRepository;
 import com.example.demo.repositories.UsuarioRepository;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -94,15 +96,11 @@ public class ClienteService {
     }
 
     @Transactional(readOnly = true)
-    public void buscarPorId(String id) throws Error {
+    public Cliente buscarPorId(String id) throws Error {
 
         Optional<Cliente> respuesta = clienteRepository.findById(id);
         if (respuesta.isPresent()) {
-            Cliente cliente = respuesta.get();
-
-            cliente.getUsuario().setFechaBaja(new Date());
-
-            clienteRepository.save(cliente);
+            return respuesta.get();
 
         } else {
             throw new Error("No se encontró el cliente solicitado.");
