@@ -126,4 +126,11 @@ public class FamiliaService {
         return familiaRepository.buscarPorUsuario(idUsuario);
 
     }
+
+    public Familia buscarPorCasa(String idCasa) {
+
+        return familiaRepository.buscarPorCasa(idCasa);
+
+
+    }
 }

@@ -3,6 +3,7 @@ package com.example.demo.services;
 import com.example.demo.entities.Casa;
 import com.example.demo.entities.Cliente;
 import com.example.demo.entities.Estancia;
+import com.example.demo.entities.Usuario;
 import com.example.demo.repositories.CasaRepository;
 import com.example.demo.repositories.ClienteRepository;
 import com.example.demo.repositories.EstanciaRepository;
@@ -39,6 +40,8 @@ public class EstanciaService {
                 
                 Estancia estancia = new Estancia();
 
+                casa.setFechaDesde(fechaHasta);
+                
                 estancia.setCasa(casa);
                 estancia.setCliente(cliente);
                 estancia.setFechaDesde(fechaDesde);
@@ -122,20 +125,16 @@ public class EstanciaService {
             throw new Error("Se debe ingresar la fecha de regreso");
         }
         if (casa.getFechaDesde().after(fechaDesde)) {
-            throw new Error("No esta permitida dicha fecha de arrivo. Indique una posterior al " + 
-                    casa.getFechaDesde().getDate() + "/" + casa.getFechaDesde().getMonth() + "/" +
-                    casa.getFechaDesde().getYear());
+            throw new Error("No esta permitida dicha fecha de arrivo. Verifique disponibilidad.");
         }
         if (casa.getFechaHasta().before(fechaHasta)) {
-            throw new Error("No esta permitida dicha fecha de regreso. Indique una posterior al " + 
-                    casa.getFechaHasta().getDate() + "/" + casa.getFechaHasta().getMonth() + "/" +
-                    casa.getFechaHasta().getYear());
+            throw new Error("No esta permitida dicha fecha de regreso. Verifique disponibilidad.");
         }
         
         Long dif = convertidorDateToLocalDate(fechaHasta).toEpochDay() - convertidorDateToLocalDate(fechaDesde).toEpochDay();
         
         if (dif > casa.getMaxDias() || dif < casa.getMaxDias()) {
-            throw new Error("Supera o no alcanza el los limites de estancia determinados por la familia.");
+            throw new Error("Supera o no alcanza los limites de dias." + dif);
         }
         
     }
@@ -144,6 +143,23 @@ public class EstanciaService {
         return fechaDesde.toInstant()
       .atZone(ZoneId.systemDefault())
       .toLocalDate();
+
+    }
+
+    public Estancia buscarPorUsuario(Usuario usuario) {
+        
+        Optional<Cliente> respuesta = Optional.empty();
+        respuesta = Optional.ofNullable(clienteRepository.buscarPorUsuario(usuario.getId()));
+        
+        if (respuesta.isPresent()) {
+            Cliente cliente = respuesta.get();
+            return estanciaRepository.buscarPorCliente(cliente.getId());
+        } else {
+            throw new Error("No se encontro estancia para el cliente solicitado");
+        }
+        
+        
+
 
     }
 }

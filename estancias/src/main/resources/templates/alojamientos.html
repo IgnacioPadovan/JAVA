@@ -9,7 +9,7 @@
 
     <header class="masthead" >
         <h1 class="masthead-heading mb-0">¡Busca el alojamiento que mas te guste!</h1>
-        <div th:if="${cliente == null}">
+        <div th:if="${cliente == null && session.usuariosession != null}">
         <h2 class="masthead-subheading mb-0" th:text="${session.usuariosession.alias + ' completa tu perfil para alojarte'}"></h2>
         <a th:href="@{/cliente/(accion=crear-cliente)}" class="btn btn-primary btn-xl rounded-pill mt-5">Terminar de configuar</a>
         </div>
@@ -29,7 +29,7 @@
                     <th>Dias (Minimo - Maximo)</th>
                     <th>Precio</th>
                     <th>Tipo de Vivienda</th>
-                    <th th:if="${session.usuariosession != null}" >Acciones</th>
+                    <th th:if="${session.usuariosession != null && cliente  != null}" >Acciones</th>
                 </thead>
                 <tbody>
                     <tr th:each="casa : ${casas}">
@@ -42,9 +42,8 @@
                         <td th:text="${casa.minDias + ' - ' + casa.maxDias}"></td>
                         <td th:text="${casa.precio}"></td>
                         <td th:text="${casa.tipoVivienda}"></td>
-                        <td class="col">
-                            <a th:if="${session.usuariosession != null && cliente != null}" th:href="@{/estancia/(idCasa=__${casa.id}__,idCliente=__${cliente.id}__, accion=cargar)}">Reservar</a>
-                        <!--     <a th:if="${session.adminsession != null}" th:href="@{/libro/editar-libro(id=__${libro.id}__,accion='Eliminar')}">Dar de Baja</a> -->
+                        <td th:if="${session.usuariosession != null && cliente != null}" class="col">
+                            <a th:href="@{/estancia/(idCasa=__${casa.id}__,idCliente=__${cliente.id}__, accion=cargar)}">Reservar</a>
                         </td>
                     </tr>
                 </tbody>

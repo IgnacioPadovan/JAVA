@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Casa;
+import com.example.demo.entities.Estancia;
 import com.example.demo.entities.Familia;
 import com.example.demo.repositories.CasaRepository;
 import com.example.demo.repositories.FamiliaRepository;
@@ -20,7 +21,7 @@ public class CasaService {
 
     @Autowired
     private FamiliaRepository familiaRepository;
-    
+
     @Transactional
     public void registrar(Familia familia, String calle, String codPostal, String ciudad,
             String tipoVivienda, Date fechaDesde, Date fechaHasta, int numero,
@@ -43,7 +44,7 @@ public class CasaService {
         casa.setTipoVivienda(tipoVivienda);
 
         casaRepository.save(casa);
-        Casa c =  casaRepository.buscarCasaPorCaractersiticas(calle, numero, ciudad);
+        Casa c = casaRepository.buscarCasaPorCaractersiticas(calle, numero, pais, ciudad);
         familia.setCasa(c);
         familiaRepository.save(familia);
     }
@@ -118,7 +119,7 @@ public class CasaService {
         if (fechaHasta == null || fechaHasta.toString().isEmpty()) {
             throw new Error("Se debe ingresar la fecha de regreso");
         }
-        if (minDias < 1 || maxDias < 1 || maxDias == minDias) {
+        if (minDias < 1 || maxDias < 1 || maxDias <= minDias) {
             throw new Error("Los dias maximos y minimos no pueden ser cero, tampoco iguales");
         }
         if (precio < 100) {
@@ -149,7 +150,22 @@ public class CasaService {
             throw new Error("No se encontró la casa solicitada.");
         }
 
+    }
 
+    public Casa buscarPorEstancia(Estancia estancia) {
+        try {
+
+            Optional<Casa> respuesta = Optional.empty();
+            respuesta = Optional.ofNullable(casaRepository.buscarPorEstancia(estancia.getCasa().getId()));
+
+            if (respuesta.isPresent()) {
+                return respuesta.get();
+            } else {
+                throw new Error("No se encontro casa para la estancia solicitada");
+            }
+        } catch (Error e) {
+           return null;
+        }
 
     }
 }

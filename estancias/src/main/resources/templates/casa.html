@@ -14,40 +14,40 @@
             <p th:if="${error != null}" th:text="${error}" style="background-color: red"></p>
             <form action="/casa/registro" method="POST">
 
-                <input type="hidden" name="id" th:value="${casa.id}"/>
+              <input type="hidden" name="id" th:value=${casa.id}>
                 
               <label>Calle</label>
-              <input type="text" class="form-control" name="calle" th:value=${casa.calle} size="20"/>
+              <input type="text" class="form-control" name="calle" th:value=${casa.calle}>
               
               <label>Numero</label>
-              <input type="number" class="form-control" name="numero" th:value=${casa.numero}/>
+              <input type="number" class="form-control" name="numero" th:value=${casa.numero}>
               
                <label>Codigo Postal</label>
-              <input type="text" class="form-control" name="codPostal" th:value=${casa.codPostal}/>
+              <input type="text" class="form-control" name="codPostal" th:value=${casa.codPostal}>
               
                <label>Ciudad</label>
-              <input type="text" class="form-control" name="ciudad" th:value=${casa.ciudad}/>
+              <input type="text" class="form-control" name="ciudad" th:value=${casa.ciudad}>
               
                <label>Pais</label>
-              <input type="text" class="form-control" name="pais" th:value=${casa.pais}/>
+              <input type="text" class="form-control" name="pais" th:value=${casa.pais}>
               
               <label>Fecha de disponibilidad desde</label>
-              <input type="date" class="form-control" name="fechaDesde" th:value=${casa.fechaDesde}/>
+              <input type="date" class="form-control" name="fechaDesde" th:value=${casa.fechaDesde}>
               
               <label>Fecha de disponibilidad hasta</label>
-              <input type="date" class="form-control" name="fechaHasta" th:value=${casa.fechaHasta}/>
+              <input type="date" class="form-control" name="fechaHasta" th:value=${casa.fechaHasta}>
               
               <label>Cantidad minima de dias de alojamiento</label>
-              <input type="number" class="form-control" name="minDias" th:value=${casa.minDias}/>
+              <input type="number" class="form-control" name="minDias" th:value=${casa.minDias}>
               
               <label>Cantidad maxima de dias de alojamiento</label>
-              <input type="number" class="form-control" name="maxDias" th:value=${casa.maxDias}/>
+              <input type="number" class="form-control" name="maxDias" th:value=${casa.maxDias}>
               
               <label>Precio por dia de alojamiento</label>
-              <input type="number" class="form-control" name="precio" th:value=${casa.precio}/>
+              <input type="number" class="form-control" name="precio" th:value=${casa.precio}>
               
               <label>Tipo de Vivienda</label>
-              <input type="text" class="form-control" name="tipoVivienda" th:value=${casa.tipoVivienda}/>
+              <input type="text" class="form-control" name="tipoVivienda" th:value=${casa.tipoVivienda}>
               
               <br/><button th:if="${casa.id == null}" type="submit" class="btn btn-primary">Cargar mi casa</button>
               <br/><button th:if="${casa.id != null}"type="submit" class="btn btn-primary">Actualizar mi casa</button>

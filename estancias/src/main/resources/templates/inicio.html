@@ -14,19 +14,44 @@
         <h2 class="masthead-subheading mb-0" th:if="${session.usuariosession != null}" th:text="${session.usuariosession.alias}"></h2>
         <a th:href="@{/casa/casas(idUsuario=__${session.usuariosession.id}__)}" class="btn btn-primary btn-xl rounded-pill mt-5">Buscar Alojamiento</a>
         <a th:href="@{/casa/(idUsuario=__${session.usuariosession.id}__)}" class="btn btn-primary btn-xl rounded-pill mt-5">Ofrecer Alojamiento</a>
+        <div class="container">
+            <br>
+            <h3 class="masthead-subheading mb-0" th:if="${error != null}" th:text="${error}"></h3>
+        <div>
       </div>
+            <div th:if="${estancia != null && casa != null}">
+                <h1>Su Reserva</h1>
+                <table class="table table-light table-hover">
+                <thead>
+                    <tr class="bg-primary"></tr>
+                    <th>Pais</th>
+                    <th>Ciudad</th>
+                    <th>Calle</th>
+                    <th>Numero</th>
+                    <th>Codigo Postal</th>
+                    <th>Desde - Hasta</th>
+                    <th>Precio</th>
+                    <th>Tipo de Vivienda</th>
+                    <th>Acciones</th>
+                </thead>
+                <tbody>
+                        <td th:text="${casa.pais}"></td>
+                        <td th:text="${casa.ciudad}"></td>
+                        <td th:text="${casa.calle}"></td>
+                        <td th:text="${casa.numero}"></td>
+                        <td th:text="${casa.codPostal}"></td>
+                        <td th:text="${#dates.format(casa.fechaDesde,'dd-MMM-yyyy') + ' - ' + #dates.format(casa.fechaHasta,'dd-MMM-yyyy')}"></td>
+                        <td th:text="${casa.precio}"></td>
+                        <td th:text="${casa.tipoVivienda}"></td>
+                        <td class="col">
+                        <a th:href="@{/estancia/eliminar(idEstancia=__${estancia.id}__)}">Eliminar</a>
+                        <!--     <a th:if="${session.adminsession != null}" th:href="@{/libro/editar-libro(id=__${libro.id}__,accion='Eliminar')}">Dar de Baja</a> -->
+                        </td>
+                </tbody>
+            </table>
+            </div>
     </div>
     </header>
-    <section class="text-center content-section" id="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2>¡ANIMATE!</h2>
-                    <p>¡Muestrale tu casa al mundo!</p>
-                </div>
-            </div>
-        </div>
-    </section>
     <section class="text-center download-section content-section" id="download" style="background-image:url('assets/img/downloads-bg.jpg');"></section>
     <section class="text-center content-section" id="contact">
         <div class="container">

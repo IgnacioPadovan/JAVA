@@ -12,4 +12,7 @@ public interface FamiliaRepository extends JpaRepository<Familia, String> {
     @Query("SELECT c FROM Familia c WHERE c.usuario.id = :idUsuario")
     public Familia buscarPorUsuario(@Param("idUsuario") String idUsuario);
 
+    @Query("SELECT c FROM Familia c WHERE c.casa.id = :idCasa")
+    public Familia buscarPorCasa(@Param("idCasa") String idCasa);
+
 }

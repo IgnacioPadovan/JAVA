@@ -7,37 +7,37 @@
     
        <nav th:replace="/fragments/navbar :: nav"></nav>
         
-       <header class="masthead" >
+    <header class="masthead" >
         <h1 class="masthead-heading mb-0">Ingresa los requerimientos de tu estancia</h1>
         
-        <h2 class="masthead-subheading mb-0">Recuerde los siguientes datos utiles sobre la casa alojadora</h2>
-        <p>Disponibilidad: <span th:text="${#dates.format(casa.fechaDesde,'dd-MMM-yyyy') + ' - ' + #dates.format(casa.fechaDesde,'dd-MMM-yyyy')}"></span></p>
-        <p>Minimo/Maximo de dias para alquilar: <span th:text="${casa.minDias + '/' + casa.fechaHasta}"></span></p>
-        <p>Precio por dia: <span th:text="${casa.precio}"></span></p>
+        <h2 class="masthead-subheading mb-0">Datos utiles</h2>
+        <p>Disponibilidad: <span th:text="${#dates.format(casa.fechaDesde,'dd-MMM-yyyy') + ' hasta ' + #dates.format(casa.fechaHasta,'dd-MMM-yyyy')}"></span></p>
+        <p>Minimo/Maximo de dias para alquilar: <span th:text="${casa.minDias + '/' + casa.maxDias}"></span></p>
+        <p>Precio por dia: <span th:text="${casa.precio + ' $'}"></span></p>
 
     </header>
        
     <section class="text-center content-section">
         <div class="container">
             <p th:if="${error != null}" th:text="${error}" style="background-color: red"></p>
+            <p th:if="${cliente.usuario.id == familia.usuario.id}">¡No puede reservar su propia casa!</p>
             <form action="/estancia/registro" method="POST">
                 
-              <input type="hidden" name="idCasa" th:value="${casa.id}"/>
+              <input type="hidden" name="idCasa" th:value="${casa.id}" th:disabled="${cliente.usuario.id == familia.usuario.id}">
               
-              <input type="hidden" name="idCliente" th:value="${cliente.id}"/>
+              <input type="hidden" name="idCliente" th:value="${cliente.id}" th:disabled="${cliente.usuario.id == familia.usuario.id}">
                 
               <label>Huesped</label>
-              <input type="text" class="form-control" name="huesped" th:value=${estancia.huesped}/>
+              <input type="text" class="form-control" name="huesped" th:value=${huesped} th:disabled="${cliente.usuario.id == familia.usuario.id}">
               
               <label>Fecha de estancia desde</label>
-              <input type="date" class="form-control" name="fechaDesde" th:value=${estancia.fechaDesde}/>
+              <input type="date" class="form-control" name="fechaDesde" th:value=${fechaDesde} th:disabled="${cliente.usuario.id == familia.usuario.id}">
               
               <label>Fecha de estancia hasta</label>
-              <input type="date" class="form-control" name="fechaHasta" th:value=${estancia.fechaHasta}/>
+              <input type="date" class="form-control" name="fechaHasta" th:value=${fechaHasta} th:disabled="${cliente.usuario.id == familia.usuario.id}">
               
-              <br/><button th:if="${estancia.id == null}" type="submit" class="btn btn-primary">Solicitar reserva</button>
-              <!-- <br/><button th:if="${casa.id != null}"type="submit" class="btn btn-primary">Actualizar mi casa</button>
-           --> </form>
+              <br/><button type="submit" class="btn btn-primary">Solicitar reserva</button>
+              </form>
         </div>
     </section>
     <section class="text-center download-section content-section" id="download" style="background-image:url('assets/img/downloads-bg.jpg');"></section>

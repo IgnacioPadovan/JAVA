@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@PreAuthorize("hasAnyRole('ROLE_USUARIO_REGISTRADO')")
 @Controller
 @RequestMapping("/casa")
 public class CasaController {
@@ -37,6 +36,7 @@ public class CasaController {
     @Autowired
     private ClienteService clienteService;
 
+    @PreAuthorize("hasAnyRole('ROLE_USUARIO_REGISTRADO')")
     @GetMapping("/")
     public String index(@RequestParam String idUsuario, ModelMap modelo, String accion) {
 
@@ -61,6 +61,7 @@ public class CasaController {
 
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_USUARIO_REGISTRADO')")
     @PostMapping("/registro")
     public String registro(ModelMap modelo, @RequestParam String calle, @RequestParam String codPostal,
             @RequestParam String ciudad, @RequestParam String pais, @RequestParam Integer numero,
@@ -69,40 +70,32 @@ public class CasaController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fechaHasta, @RequestParam Integer minDias,
             @RequestParam Integer maxDias, @RequestParam double precio, HttpSession session) {
 
+        Usuario usuario = (Usuario) session.getAttribute("usuariosession");
+        Familia familia = familiaService.buscarPorUsuario(usuario.getId());
+
         try {
             if (id.isEmpty() || id == null) {
-                Usuario usuario = (Usuario) session.getAttribute("usuariosession");
-                Familia familia = familiaService.buscarPorUsuario(usuario.getId());
                 casaService.registrar(familia, calle, codPostal, ciudad, tipoVivienda, fechaDesde,
-                        fechaHasta, numero,
-                        minDias, maxDias, precio, pais);
+                        fechaHasta, numero, minDias, maxDias, precio, pais);
             } else {
                 casaService.modificar(id, calle, codPostal, ciudad, tipoVivienda, fechaDesde,
                         fechaHasta, numero, minDias, maxDias, precio, pais);
             }
 
         } catch (Error e) {
-            modelo.put("error", e.getMessage());
-            modelo.put("calle", calle);
-            modelo.put("codPostal", codPostal);
-            modelo.put("ciudad", ciudad);
-            modelo.put("pais", pais);
-            modelo.put("numero", numero);
-            modelo.put("tipoVivienda", tipoVivienda);
-            modelo.put("fechaDesde", fechaDesde);
-            modelo.put("fechaHasta", fechaHasta);
-            modelo.put("minDias", minDias);
-            modelo.put("maxDias", maxDias);
-            modelo.put("precio", precio);
 
-            return "casa.html";
+            Casa casa = familia.getCasa();
+            modelo.put("error", e.getMessage());
+            modelo.put("casa", casa);
+
+            return "casa";
         }
 
-        return "inicio.html";
+        return "inicio";
     }
 
     @GetMapping("/casas")
-    public String mostrarCasas(@RequestParam String idUsuario, ModelMap modelo) {
+    public String mostrarCasas(@RequestParam(required = false) String idUsuario, ModelMap modelo) {
         Cliente cliente = clienteService.buscarPorUsuario(idUsuario);
         List<Casa> casas = casaService.listarCasas();
         modelo.put("cliente", cliente);

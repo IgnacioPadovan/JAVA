@@ -1,10 +1,13 @@
 package com.example.demo.controllers;
 
-import com.example.demo.services.ClienteService;
+import com.example.demo.entities.Casa;
+import com.example.demo.entities.Estancia;
+import com.example.demo.entities.Usuario;
+import com.example.demo.services.CasaService;
+import com.example.demo.services.EstanciaService;
 import com.example.demo.services.FamiliaService;
 import com.example.demo.services.UsuarioService;
-import java.util.Date;
-import java.util.List;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -23,7 +26,9 @@ public class PortalController {
     @Autowired
     private FamiliaService familiaService;
     @Autowired
-    private ClienteService clienteService;
+    private EstanciaService estanciaService;
+    @Autowired
+    private CasaService casaService;
 
     @GetMapping("/")
     public String index() {
@@ -34,10 +39,41 @@ public class PortalController {
     public String registro(ModelMap modelo) {
         return "registro.html";
 
-    }@PreAuthorize("hasAnyRole('ROLE_USUARIO_REGISTRADO')")
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USUARIO_REGISTRADO')")
     @GetMapping("/inicio")
-    public String inicio() {
-        return "inicio.html";
+    public String inicio(ModelMap modelo, HttpSession session) {
+
+        try {
+
+            Estancia estancia = estanciaService.buscarPorUsuario((Usuario) session.getAttribute("usuariosession"));
+
+            if (estancia == null) {
+
+                modelo.put("estancia", estancia);
+                modelo.put("casa", null);
+                
+            } else {
+                
+                Casa casa = casaService.buscarPorEstancia(estancia);
+                
+                modelo.put("estancia", estancia);
+                modelo.put("casa", casa);
+            }
+
+            return "inicio.html";
+
+        } catch (Error e) {
+
+            modelo.put("estancia", null);
+            modelo.put("casa", null);
+
+            modelo.put("error", e.getMessage());
+
+            return "inicio.html";
+        }
+
     }
 
     @GetMapping("/login")
